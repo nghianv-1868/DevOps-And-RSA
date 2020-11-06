@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  server:
+    image: server-rsa
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/server
+    ports:
+      - '${PUBLIC_PORT_SERVER}:${DOCKER_PORT_SERVER}'
+    restart: unless-stopped
+    environment:
+      PORT: ${DOCKER_PORT_SERVER}
+  client:
+    image: client-rsa
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/client
+      - '/client/node_modules'
+    ports:
+      - '${PUBLIC_PORT_CLIENT}:${DOCKER_PORT_CLIENT}'
+    stdin_open: true
+    environment:
+      PORT: ${REACT_APP_HOST_SERVER}
